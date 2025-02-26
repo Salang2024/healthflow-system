@@ -7,6 +7,7 @@ import { BrowserRouter, Routes, Route } from "react-router-dom";
 import Registration from "./pages/reception/Registration";
 import Triage from "./pages/triage/Triage";
 import Doctor from "./pages/doctor/Doctor";
+import Dashboard from "./pages/dashboard/Dashboard";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -18,7 +19,8 @@ const App = () => (
       <Sonner />
       <BrowserRouter>
         <Routes>
-          <Route path="/" element={<Registration />} />
+          <Route path="/" element={<Dashboard />} />
+          <Route path="/dashboard" element={<Dashboard />} />
           <Route path="/reception/registration" element={<Registration />} />
           <Route path="/triage" element={<Triage />} />
           <Route path="/doctor" element={<Doctor />} />
