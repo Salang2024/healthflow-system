@@ -8,6 +8,7 @@ import { Header } from "./components/layout/Header";
 import Registration from "./pages/reception/Registration";
 import Triage from "./pages/triage/Triage";
 import Doctor from "./pages/doctor/Doctor";
+import Laboratory from "./pages/laboratory/Laboratory";
 import Dashboard from "./pages/dashboard/Dashboard";
 import NotFound from "./pages/NotFound";
 
@@ -28,6 +29,7 @@ const App = () => (
               <Route path="/reception/registration" element={<Registration />} />
               <Route path="/triage" element={<Triage />} />
               <Route path="/doctor" element={<Doctor />} />
+              <Route path="/laboratory" element={<Laboratory />} />
               <Route path="*" element={<NotFound />} />
             </Routes>
           </main>
