@@ -6,10 +6,9 @@ import { Sidebar } from "./Sidebar";
 import { LocationSelector } from "../location/LocationSelector";
 
 export const Layout = () => {
-  const [locationSelected, setLocationSelected] = useState(true); // Changed to true by default
+  const [locationSelected, setLocationSelected] = useState(false);
   const location = useLocation();
   const isDashboard = location.pathname === "/" || location.pathname === "/dashboard";
-  const isLaboratory = location.pathname.includes("/laboratory");
 
   return (
     <div className="min-h-screen flex flex-col">
@@ -22,7 +21,7 @@ export const Layout = () => {
               <LocationSelector onOpen={() => setLocationSelected(true)} />
             </div>
           ) : (
-            <div className={`animate-fadeIn ${isDashboard ? "p-2" : isLaboratory ? "p-0" : "p-6"}`}>
+            <div className={`animate-fadeIn ${isDashboard ? "p-2" : "p-6"}`}>
               <Outlet />
             </div>
           )}

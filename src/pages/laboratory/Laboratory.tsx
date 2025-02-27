@@ -7,16 +7,13 @@ import { Button } from "@/components/ui/button";
 import { useToast } from "@/hooks/use-toast";
 import { 
   Beaker, 
-  FileText, 
-  Clock, 
+  FileCheck, 
+  ClockIcon, 
   Search, 
   CheckCircle, 
   XCircle,
   Calendar,
-  User,
-  Filter,
-  ArrowLeft,
-  ArrowRight
+  User
 } from "lucide-react";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
@@ -55,51 +52,51 @@ interface LabTest {
 const mockPatients: Patient[] = [
   {
     id: "P001",
-    name: "Jasmine Bahasha Salugole",
+    name: "John Doe",
     patientNumber: "5758",
     age: 38,
-    gender: "Female",
+    gender: "Male",
     phoneNumber: "0754385050",
     sponsor: "CASH",
-    doctorName: "Marcelina sweetbert rwegasira",
+    doctorName: "Dr. Smith",
     priority: "Normal",
     orderedDate: "2024-02-27"
   },
   {
     id: "P002",
-    name: "Rehema S Mmomi",
+    name: "Jane Smith",
     patientNumber: "9653",
-    age: 69,
+    age: 45,
     gender: "Female",
     phoneNumber: "0652570500",
     sponsor: "NHIF",
-    doctorName: "Marcelina sweetbert rwegasira",
-    priority: "Normal",
+    doctorName: "Dr. Johnson",
+    priority: "Urgent",
     orderedDate: "2024-02-27"
   },
   {
     id: "P003",
-    name: "Usama M Khamisi",
+    name: "Robert Brown",
     patientNumber: "9662",
     age: 29,
     gender: "Male",
     phoneNumber: "0658695339",
     sponsor: "NHIF",
-    doctorName: "aman twaha msemakweli",
+    doctorName: "Dr. Williams",
     priority: "Normal",
     orderedDate: "2024-02-27"
   },
   {
     id: "P004",
-    name: "Celina Willan Asalila",
-    patientNumber: "9663",
-    age: 30,
+    name: "Elizabeth Kapela",
+    patientNumber: "9380",
+    age: 25,
     gender: "Female",
-    phoneNumber: "0742761059",
+    phoneNumber: "0712345678",
     sponsor: "CASH",
-    doctorName: "Mwalimu Ame Abeid",
+    doctorName: "Dr. Shaban",
     priority: "Normal",
-    orderedDate: "2024-02-27"
+    orderedDate: "2024-02-21"
   }
 ];
 
@@ -202,11 +199,6 @@ const Laboratory = () => {
   const [searchTerm, setSearchTerm] = useState("");
   const [rejectReason, setRejectReason] = useState("");
   const [labResults, setLabResults] = useState("");
-  const [startDate, setStartDate] = useState("2025-02-27 00:00");
-  const [endDate, setEndDate] = useState("2025-02-27 23:59");
-  const [patientStatus, setPatientStatus] = useState("All");
-  const [department, setDepartment] = useState("Laboratory");
-  const [currentPage, setCurrentPage] = useState(1);
   const { toast } = useToast();
 
   // Filter tests based on their status
@@ -320,229 +312,69 @@ const Laboratory = () => {
       )
     : patients;
 
-  return (
-    <div className="w-full">
-      {/* Top department and change bar */}
-      <div className="bg-white flex justify-between items-center px-4 py-2 border-b">
-        <div className="flex items-center">
-          <span className="font-semibold">Sub Department</span>
-          <span className="ml-4 px-4 py-1 bg-blue-100 rounded">Laboratory</span>
-        </div>
-        <Button variant="outline" className="bg-blue-900 text-white hover:bg-blue-800">
-          Change
-        </Button>
-      </div>
-
-      {/* Filter controls */}
-      <div className="bg-white p-4 border-b">
-        <div className="grid grid-cols-2 md:grid-cols-5 gap-4 mb-4">
-          <div>
-            <Input 
-              type="datetime-local" 
-              className="w-full" 
-              value={startDate}
-              onChange={(e) => setStartDate(e.target.value)}
-            />
-          </div>
-          <div>
-            <Input 
-              type="datetime-local" 
-              className="w-full" 
-              value={endDate}
-              onChange={(e) => setEndDate(e.target.value)}
-            />
-          </div>
-          <div>
-            <Select value={patientStatus} onValueChange={setPatientStatus}>
-              <SelectTrigger className="w-full">
-                <SelectValue placeholder="Patient Status" />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="All">All</SelectItem>
-                <SelectItem value="Normal">Normal</SelectItem>
-                <SelectItem value="Urgent">Urgent</SelectItem>
-                <SelectItem value="VIP">VIP</SelectItem>
-              </SelectContent>
-            </Select>
-          </div>
-          <div>
-            <Select value={department} onValueChange={setDepartment}>
-              <SelectTrigger className="w-full">
-                <SelectValue placeholder="Department" />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="Laboratory">Laboratory</SelectItem>
-                <SelectItem value="All Departments">All Departments</SelectItem>
-              </SelectContent>
-            </Select>
-          </div>
-          <div>
-            <Select>
-              <SelectTrigger className="w-full">
-                <SelectValue placeholder="Sponsor" />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="all">All Sponsors</SelectItem>
-                <SelectItem value="cash">CASH</SelectItem>
-                <SelectItem value="nhif">NHIF</SelectItem>
-              </SelectContent>
-            </Select>
-          </div>
-        </div>
-        
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-          <div className="relative">
-            <Input 
-              placeholder="Patient Name" 
-              className="pl-10" 
-              value={searchTerm}
-              onChange={(e) => setSearchTerm(e.target.value)}
-            />
-            <Search className="absolute left-3 top-3 h-4 w-4 text-gray-500" />
-            <Button variant="ghost" className="absolute right-1 top-1 h-8 w-8 p-0">
-              <Search className="h-4 w-4" />
-            </Button>
-          </div>
-          <div className="relative">
-            <Input placeholder="Patient Number" className="pl-10" />
-            <Search className="absolute left-3 top-3 h-4 w-4 text-gray-500" />
-            <Button variant="ghost" className="absolute right-1 top-1 h-8 w-8 p-0">
-              <Search className="h-4 w-4" />
-            </Button>
-          </div>
+  // Render patient details
+  const renderPatientDetails = (patient: Patient) => (
+    <div className="bg-blue-50 p-4 rounded-lg mb-4 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-2">
+      <div className="flex items-center">
+        <User className="mr-2 h-5 w-5 text-gray-500" />
+        <div>
+          <p className="text-sm font-medium">{patient.name}</p>
+          <p className="text-xs text-gray-500">ID: {patient.patientNumber}</p>
         </div>
       </div>
-
-      {/* Legend and title */}
-      <div className="p-4 bg-white border-b">
-        <div className="flex justify-between items-center">
-          <h2 className="text-lg font-semibold">Laboratory Sample Collection Patient List</h2>
-          <div className="flex gap-4">
-            <div className="flex items-center">
-              <div className="h-4 w-4 bg-green-500 rounded-sm mr-1"></div>
-              <span className="text-xs">Normal Patient</span>
-            </div>
-            <div className="flex items-center">
-              <div className="h-4 w-4 bg-blue-500 rounded-sm mr-1"></div>
-              <span className="text-xs">VIP Patient</span>
-            </div>
-            <div className="flex items-center">
-              <div className="h-4 w-4 bg-red-500 rounded-sm mr-1"></div>
-              <span className="text-xs">Urgent Patient</span>
-            </div>
-            <div className="flex items-center">
-              <div className="h-4 w-4 bg-yellow-300 rounded-sm mr-1"></div>
-              <span className="text-xs">Contain Processed Test</span>
-            </div>
-          </div>
+      <div className="flex items-center">
+        <Calendar className="mr-2 h-5 w-5 text-gray-500" />
+        <div>
+          <p className="text-sm">{patient.age} years</p>
+          <p className="text-xs text-gray-500">{patient.gender}</p>
         </div>
       </div>
+      <div>
+        <p className="text-sm">Doctor: {patient.doctorName}</p>
+        <p className="text-xs text-gray-500">Sponsor: {patient.sponsor}</p>
+      </div>
+      <div>
+        <p className="text-sm">Phone: {patient.phoneNumber}</p>
+        <div className={`text-xs inline-flex items-center px-2 py-1 rounded-full ${
+          patient.priority === "Urgent" ? "bg-red-100 text-red-800" : 
+          patient.priority === "VIP" ? "bg-purple-100 text-purple-800" : 
+          "bg-green-100 text-green-800"
+        }`}>
+          {patient.priority}
+        </div>
+      </div>
+    </div>
+  );
 
-      {/* Patient table */}
-      <div className="bg-white border-b overflow-x-auto">
-        <table className="min-w-full divide-y divide-gray-200">
-          <thead className="bg-gray-50">
-            <tr>
-              <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">S/N</th>
-              <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Priority</th>
-              <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Name</th>
-              <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Patient Number</th>
-              <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Sponsor</th>
-              <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Age</th>
-              <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Gender</th>
-              <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Phone Number</th>
-              <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Ward</th>
-              <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Doctor Name</th>
-              <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Ordered Date</th>
-            </tr>
-          </thead>
-          <tbody className="bg-white divide-y divide-gray-200">
-            {filteredPatients.map((patient, index) => (
-              <tr 
-                key={patient.id} 
-                className="hover:bg-gray-50 cursor-pointer"
-                onClick={() => setActivePatient(patient)}
-              >
-                <td className="px-4 py-3 whitespace-nowrap text-sm">{index + 1}</td>
-                <td className="px-4 py-3 whitespace-nowrap text-sm">
-                  <div className={`py-1 px-2 text-center ${
-                    patient.priority === "Normal" ? "bg-green-500 text-white" : 
-                    patient.priority === "Urgent" ? "bg-red-500 text-white" : 
-                    "bg-blue-500 text-white"
-                  }`}>
-                    {patient.priority}
-                  </div>
-                </td>
-                <td className="px-4 py-3 whitespace-nowrap text-sm">{patient.name}</td>
-                <td className="px-4 py-3 whitespace-nowrap text-sm">{patient.patientNumber}</td>
-                <td className="px-4 py-3 whitespace-nowrap text-sm">{patient.sponsor}</td>
-                <td className="px-4 py-3 whitespace-nowrap text-sm">{patient.age} years</td>
-                <td className="px-4 py-3 whitespace-nowrap text-sm">{patient.gender}</td>
-                <td className="px-4 py-3 whitespace-nowrap text-sm">{patient.phoneNumber}</td>
-                <td className="px-4 py-3 whitespace-nowrap text-sm"></td>
-                <td className="px-4 py-3 whitespace-nowrap text-sm">{patient.doctorName}</td>
-                <td className="px-4 py-3 whitespace-nowrap text-sm">{patient.orderedDate}</td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
+  // Collection Tab Content
+  const CollectionTab = () => (
+    <div>
+      <div className="mb-4 flex items-center gap-4">
+        <div className="relative flex-1">
+          <Search className="absolute left-2 top-2.5 h-4 w-4 text-gray-500" />
+          <Input
+            placeholder="Search patient by name or ID..."
+            className="pl-8"
+            value={searchTerm}
+            onChange={(e) => setSearchTerm(e.target.value)}
+          />
+        </div>
+        <Select>
+          <SelectTrigger className="w-[180px]">
+            <SelectValue placeholder="Filter by priority" />
+          </SelectTrigger>
+          <SelectContent>
+            <SelectItem value="all">All Priorities</SelectItem>
+            <SelectItem value="normal">Normal</SelectItem>
+            <SelectItem value="urgent">Urgent</SelectItem>
+            <SelectItem value="vip">VIP</SelectItem>
+          </SelectContent>
+        </Select>
       </div>
 
-      {/* Pagination */}
-      <div className="bg-white p-4 flex justify-center items-center gap-2">
-        <Button variant="outline" size="sm" className="h-8 w-8 p-0">
-          <span className="sr-only">Go to first page</span>
-          <span>«</span>
-        </Button>
-        <Button variant="outline" size="sm" className="h-8 w-8 p-0">
-          <span className="sr-only">Go to previous page</span>
-          <span>‹</span>
-        </Button>
-        <Button size="sm" className="h-8 w-8 p-0 bg-cyan-400 hover:bg-cyan-500">
-          1
-        </Button>
-        <Button variant="outline" size="sm" className="h-8 w-8 p-0">
-          <span className="sr-only">Go to next page</span>
-          <span>›</span>
-        </Button>
-        <Button variant="outline" size="sm" className="h-8 w-8 p-0">
-          <span className="sr-only">Go to last page</span>
-          <span>»</span>
-        </Button>
-      </div>
-
-      {/* Original tabs content - Will only show when a patient is selected */}
-      {activePatient && (
-        <Tabs defaultValue="collection" className="mt-4 p-4 bg-white">
-          <TabsList className="w-full border-b pb-0 mb-4">
-            <TabsTrigger value="collection" className="flex items-center gap-2 data-[state=active]:border-b-2 data-[state=active]:border-[#009933]">
-              <Beaker className="h-5 w-5" />
-              Collect Specimen
-              <span className="ml-1 bg-gray-100 text-gray-700 text-xs rounded-full px-2 py-1">
-                {pendingCollectionTests.length}
-              </span>
-            </TabsTrigger>
-            <TabsTrigger value="reception" className="flex items-center gap-2 data-[state=active]:border-b-2 data-[state=active]:border-[#009933]">
-              <CheckCircle className="h-5 w-5" />
-              Receive Specimen
-              <span className="ml-1 bg-gray-100 text-gray-700 text-xs rounded-full px-2 py-1">
-                {collectedTests.length}
-              </span>
-            </TabsTrigger>
-            <TabsTrigger value="results" className="flex items-center gap-2 data-[state=active]:border-b-2 data-[state=active]:border-[#009933]">
-              <FileText className="h-5 w-5" />
-              Patient Lab Results
-              <span className="ml-1 bg-gray-100 text-gray-700 text-xs rounded-full px-2 py-1">
-                {receivedTests.length}
-              </span>
-            </TabsTrigger>
-            <TabsTrigger value="previous" className="flex items-center gap-2 data-[state=active]:border-b-2 data-[state=active]:border-[#009933]">
-              <Clock className="h-5 w-5" />
-              View Previous Results
-            </TabsTrigger>
-          </TabsList>
-          
-          <TabsContent value="collection" className="p-4 border rounded-lg shadow-sm">
+      <div className="space-y-4">
+        {activePatient ? (
+          <div>
             <Button 
               variant="outline" 
               className="mb-4"
@@ -551,36 +383,7 @@ const Laboratory = () => {
               Back to Patient List
             </Button>
             
-            <div className="bg-blue-50 p-4 rounded-lg mb-4 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-2">
-              <div className="flex items-center">
-                <User className="mr-2 h-5 w-5 text-gray-500" />
-                <div>
-                  <p className="text-sm font-medium">{activePatient.name}</p>
-                  <p className="text-xs text-gray-500">ID: {activePatient.patientNumber}</p>
-                </div>
-              </div>
-              <div className="flex items-center">
-                <Calendar className="mr-2 h-5 w-5 text-gray-500" />
-                <div>
-                  <p className="text-sm">{activePatient.age} years</p>
-                  <p className="text-xs text-gray-500">{activePatient.gender}</p>
-                </div>
-              </div>
-              <div>
-                <p className="text-sm">Doctor: {activePatient.doctorName}</p>
-                <p className="text-xs text-gray-500">Sponsor: {activePatient.sponsor}</p>
-              </div>
-              <div>
-                <p className="text-sm">Phone: {activePatient.phoneNumber}</p>
-                <div className={`text-xs inline-flex items-center px-2 py-1 rounded-full ${
-                  activePatient.priority === "Urgent" ? "bg-red-100 text-red-800" : 
-                  activePatient.priority === "VIP" ? "bg-purple-100 text-purple-800" : 
-                  "bg-green-100 text-green-800"
-                }`}>
-                  {activePatient.priority}
-                </div>
-              </div>
-            </div>
+            {renderPatientDetails(activePatient)}
             
             <h3 className="text-lg font-medium mb-4">Pending Tests for Collection</h3>
             
@@ -636,9 +439,99 @@ const Laboratory = () => {
                 </div>
               )}
             </div>
-          </TabsContent>
-          
-          <TabsContent value="reception" className="p-4 border rounded-lg shadow-sm">
+          </div>
+        ) : (
+          <div className="border rounded-lg overflow-hidden">
+            <table className="min-w-full divide-y divide-gray-200">
+              <thead className="bg-gray-50">
+                <tr>
+                  <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">ID</th>
+                  <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Name</th>
+                  <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Age</th>
+                  <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Gender</th>
+                  <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Doctor</th>
+                  <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Priority</th>
+                  <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Pending Tests</th>
+                  <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Actions</th>
+                </tr>
+              </thead>
+              <tbody className="bg-white divide-y divide-gray-200">
+                {filteredPatients.filter(
+                  patient => getPatientTests(patient.id, "pending_collection").length > 0
+                ).map((patient) => (
+                  <tr key={patient.id}>
+                    <td className="px-4 py-3 whitespace-nowrap text-sm">{patient.patientNumber}</td>
+                    <td className="px-4 py-3 whitespace-nowrap text-sm">{patient.name}</td>
+                    <td className="px-4 py-3 whitespace-nowrap text-sm">{patient.age}</td>
+                    <td className="px-4 py-3 whitespace-nowrap text-sm">{patient.gender}</td>
+                    <td className="px-4 py-3 whitespace-nowrap text-sm">{patient.doctorName}</td>
+                    <td className="px-4 py-3 whitespace-nowrap text-sm">
+                      <span className={`inline-flex items-center px-2 py-1 rounded-full text-xs font-medium ${
+                        patient.priority === "Urgent" ? "bg-red-100 text-red-800" : 
+                        patient.priority === "VIP" ? "bg-purple-100 text-purple-800" : 
+                        "bg-green-100 text-green-800"
+                      }`}>
+                        {patient.priority}
+                      </span>
+                    </td>
+                    <td className="px-4 py-3 whitespace-nowrap text-sm">
+                      {getPatientTests(patient.id, "pending_collection").length}
+                    </td>
+                    <td className="px-4 py-3 whitespace-nowrap text-sm">
+                      <Button 
+                        size="sm" 
+                        variant="outline"
+                        onClick={() => setActivePatient(patient)}
+                      >
+                        View Tests
+                      </Button>
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+            {filteredPatients.filter(
+              patient => getPatientTests(patient.id, "pending_collection").length > 0
+            ).length === 0 && (
+              <div className="text-center py-6 text-gray-500">
+                No patients with pending tests
+              </div>
+            )}
+          </div>
+        )}
+      </div>
+    </div>
+  );
+
+  // Reception Tab Content
+  const ReceptionTab = () => (
+    <div>
+      <div className="mb-4 flex items-center gap-4">
+        <div className="relative flex-1">
+          <Search className="absolute left-2 top-2.5 h-4 w-4 text-gray-500" />
+          <Input
+            placeholder="Search patient by name or ID..."
+            className="pl-8"
+            value={searchTerm}
+            onChange={(e) => setSearchTerm(e.target.value)}
+          />
+        </div>
+        <Select>
+          <SelectTrigger className="w-[180px]">
+            <SelectValue placeholder="Filter by priority" />
+          </SelectTrigger>
+          <SelectContent>
+            <SelectItem value="all">All Priorities</SelectItem>
+            <SelectItem value="normal">Normal</SelectItem>
+            <SelectItem value="urgent">Urgent</SelectItem>
+            <SelectItem value="vip">VIP</SelectItem>
+          </SelectContent>
+        </Select>
+      </div>
+
+      <div className="space-y-4">
+        {activePatient ? (
+          <div>
             <Button 
               variant="outline" 
               className="mb-4"
@@ -647,36 +540,7 @@ const Laboratory = () => {
               Back to Patient List
             </Button>
             
-            <div className="bg-blue-50 p-4 rounded-lg mb-4 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-2">
-              <div className="flex items-center">
-                <User className="mr-2 h-5 w-5 text-gray-500" />
-                <div>
-                  <p className="text-sm font-medium">{activePatient.name}</p>
-                  <p className="text-xs text-gray-500">ID: {activePatient.patientNumber}</p>
-                </div>
-              </div>
-              <div className="flex items-center">
-                <Calendar className="mr-2 h-5 w-5 text-gray-500" />
-                <div>
-                  <p className="text-sm">{activePatient.age} years</p>
-                  <p className="text-xs text-gray-500">{activePatient.gender}</p>
-                </div>
-              </div>
-              <div>
-                <p className="text-sm">Doctor: {activePatient.doctorName}</p>
-                <p className="text-xs text-gray-500">Sponsor: {activePatient.sponsor}</p>
-              </div>
-              <div>
-                <p className="text-sm">Phone: {activePatient.phoneNumber}</p>
-                <div className={`text-xs inline-flex items-center px-2 py-1 rounded-full ${
-                  activePatient.priority === "Urgent" ? "bg-red-100 text-red-800" : 
-                  activePatient.priority === "VIP" ? "bg-purple-100 text-purple-800" : 
-                  "bg-green-100 text-green-800"
-                }`}>
-                  {activePatient.priority}
-                </div>
-              </div>
-            </div>
+            {renderPatientDetails(activePatient)}
             
             <h3 className="text-lg font-medium mb-4">Collected Tests Pending Reception</h3>
             
@@ -743,9 +607,99 @@ const Laboratory = () => {
                 </div>
               )}
             </div>
-          </TabsContent>
-          
-          <TabsContent value="results" className="p-4 border rounded-lg shadow-sm">
+          </div>
+        ) : (
+          <div className="border rounded-lg overflow-hidden">
+            <table className="min-w-full divide-y divide-gray-200">
+              <thead className="bg-gray-50">
+                <tr>
+                  <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">ID</th>
+                  <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Name</th>
+                  <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Age</th>
+                  <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Gender</th>
+                  <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Doctor</th>
+                  <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Priority</th>
+                  <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Collected Tests</th>
+                  <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Actions</th>
+                </tr>
+              </thead>
+              <tbody className="bg-white divide-y divide-gray-200">
+                {filteredPatients.filter(
+                  patient => getPatientTests(patient.id, "collected").length > 0
+                ).map((patient) => (
+                  <tr key={patient.id}>
+                    <td className="px-4 py-3 whitespace-nowrap text-sm">{patient.patientNumber}</td>
+                    <td className="px-4 py-3 whitespace-nowrap text-sm">{patient.name}</td>
+                    <td className="px-4 py-3 whitespace-nowrap text-sm">{patient.age}</td>
+                    <td className="px-4 py-3 whitespace-nowrap text-sm">{patient.gender}</td>
+                    <td className="px-4 py-3 whitespace-nowrap text-sm">{patient.doctorName}</td>
+                    <td className="px-4 py-3 whitespace-nowrap text-sm">
+                      <span className={`inline-flex items-center px-2 py-1 rounded-full text-xs font-medium ${
+                        patient.priority === "Urgent" ? "bg-red-100 text-red-800" : 
+                        patient.priority === "VIP" ? "bg-purple-100 text-purple-800" : 
+                        "bg-green-100 text-green-800"
+                      }`}>
+                        {patient.priority}
+                      </span>
+                    </td>
+                    <td className="px-4 py-3 whitespace-nowrap text-sm">
+                      {getPatientTests(patient.id, "collected").length}
+                    </td>
+                    <td className="px-4 py-3 whitespace-nowrap text-sm">
+                      <Button 
+                        size="sm" 
+                        variant="outline"
+                        onClick={() => setActivePatient(patient)}
+                      >
+                        View Tests
+                      </Button>
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+            {filteredPatients.filter(
+              patient => getPatientTests(patient.id, "collected").length > 0
+            ).length === 0 && (
+              <div className="text-center py-6 text-gray-500">
+                No patients with collected tests
+              </div>
+            )}
+          </div>
+        )}
+      </div>
+    </div>
+  );
+
+  // Results Tab Content
+  const ResultsTab = () => (
+    <div>
+      <div className="mb-4 flex items-center gap-4">
+        <div className="relative flex-1">
+          <Search className="absolute left-2 top-2.5 h-4 w-4 text-gray-500" />
+          <Input
+            placeholder="Search patient by name or ID..."
+            className="pl-8"
+            value={searchTerm}
+            onChange={(e) => setSearchTerm(e.target.value)}
+          />
+        </div>
+        <Select>
+          <SelectTrigger className="w-[180px]">
+            <SelectValue placeholder="Filter by priority" />
+          </SelectTrigger>
+          <SelectContent>
+            <SelectItem value="all">All Priorities</SelectItem>
+            <SelectItem value="normal">Normal</SelectItem>
+            <SelectItem value="urgent">Urgent</SelectItem>
+            <SelectItem value="vip">VIP</SelectItem>
+          </SelectContent>
+        </Select>
+      </div>
+
+      <div className="space-y-4">
+        {activePatient ? (
+          <div>
             <Button 
               variant="outline" 
               className="mb-4"
@@ -754,36 +708,7 @@ const Laboratory = () => {
               Back to Patient List
             </Button>
             
-            <div className="bg-blue-50 p-4 rounded-lg mb-4 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-2">
-              <div className="flex items-center">
-                <User className="mr-2 h-5 w-5 text-gray-500" />
-                <div>
-                  <p className="text-sm font-medium">{activePatient.name}</p>
-                  <p className="text-xs text-gray-500">ID: {activePatient.patientNumber}</p>
-                </div>
-              </div>
-              <div className="flex items-center">
-                <Calendar className="mr-2 h-5 w-5 text-gray-500" />
-                <div>
-                  <p className="text-sm">{activePatient.age} years</p>
-                  <p className="text-xs text-gray-500">{activePatient.gender}</p>
-                </div>
-              </div>
-              <div>
-                <p className="text-sm">Doctor: {activePatient.doctorName}</p>
-                <p className="text-xs text-gray-500">Sponsor: {activePatient.sponsor}</p>
-              </div>
-              <div>
-                <p className="text-sm">Phone: {activePatient.phoneNumber}</p>
-                <div className={`text-xs inline-flex items-center px-2 py-1 rounded-full ${
-                  activePatient.priority === "Urgent" ? "bg-red-100 text-red-800" : 
-                  activePatient.priority === "VIP" ? "bg-purple-100 text-purple-800" : 
-                  "bg-green-100 text-green-800"
-                }`}>
-                  {activePatient.priority}
-                </div>
-              </div>
-            </div>
+            {renderPatientDetails(activePatient)}
             
             <h3 className="text-lg font-medium mb-4">Received Tests Pending Results</h3>
             
@@ -875,28 +800,137 @@ const Laboratory = () => {
                 </div>
               )}
             </div>
-          </TabsContent>
-          
-          <TabsContent value="previous" className="p-4 border rounded-lg shadow-sm">
-            <div>
-              <div className="mb-4 flex items-center gap-4">
-                <div className="relative flex-1">
-                  <Search className="absolute left-2 top-2.5 h-4 w-4 text-gray-500" />
-                  <Input
-                    placeholder="Search patient by name or ID..."
-                    className="pl-8"
-                  />
-                </div>
-                <Button>Search</Button>
+          </div>
+        ) : (
+          <div className="border rounded-lg overflow-hidden">
+            <table className="min-w-full divide-y divide-gray-200">
+              <thead className="bg-gray-50">
+                <tr>
+                  <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">ID</th>
+                  <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Name</th>
+                  <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Age</th>
+                  <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Gender</th>
+                  <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Doctor</th>
+                  <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Priority</th>
+                  <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Received Tests</th>
+                  <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Actions</th>
+                </tr>
+              </thead>
+              <tbody className="bg-white divide-y divide-gray-200">
+                {filteredPatients.filter(
+                  patient => getPatientTests(patient.id, "received").length > 0 || getPatientTests(patient.id, "completed").length > 0
+                ).map((patient) => (
+                  <tr key={patient.id}>
+                    <td className="px-4 py-3 whitespace-nowrap text-sm">{patient.patientNumber}</td>
+                    <td className="px-4 py-3 whitespace-nowrap text-sm">{patient.name}</td>
+                    <td className="px-4 py-3 whitespace-nowrap text-sm">{patient.age}</td>
+                    <td className="px-4 py-3 whitespace-nowrap text-sm">{patient.gender}</td>
+                    <td className="px-4 py-3 whitespace-nowrap text-sm">{patient.doctorName}</td>
+                    <td className="px-4 py-3 whitespace-nowrap text-sm">
+                      <span className={`inline-flex items-center px-2 py-1 rounded-full text-xs font-medium ${
+                        patient.priority === "Urgent" ? "bg-red-100 text-red-800" : 
+                        patient.priority === "VIP" ? "bg-purple-100 text-purple-800" : 
+                        "bg-green-100 text-green-800"
+                      }`}>
+                        {patient.priority}
+                      </span>
+                    </td>
+                    <td className="px-4 py-3 whitespace-nowrap text-sm">
+                      {getPatientTests(patient.id, "received").length}
+                    </td>
+                    <td className="px-4 py-3 whitespace-nowrap text-sm">
+                      <Button 
+                        size="sm" 
+                        variant="outline"
+                        onClick={() => setActivePatient(patient)}
+                      >
+                        View Tests
+                      </Button>
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+            {filteredPatients.filter(
+              patient => getPatientTests(patient.id, "received").length > 0 || getPatientTests(patient.id, "completed").length > 0
+            ).length === 0 && (
+              <div className="text-center py-6 text-gray-500">
+                No patients with received or completed tests
               </div>
-              
-              <div className="text-center py-12 text-gray-500">
-                Search for a patient to view their previous lab results
+            )}
+          </div>
+        )}
+      </div>
+    </div>
+  );
+
+  return (
+    <div>
+      <div className="mb-6">
+        <h1 className="text-2xl font-bold text-gray-900">Laboratory Management</h1>
+        <p className="text-gray-500">Manage laboratory tests, specimens, and results</p>
+      </div>
+
+      <Tabs defaultValue="collection">
+        <TabsList className="w-full border-b pb-0 mb-4">
+          <TabsTrigger value="collection" className="flex items-center gap-2 data-[state=active]:border-b-2 data-[state=active]:border-[#009933]">
+            <Beaker className="h-5 w-5" />
+            Collect Specimen
+            <span className="ml-1 bg-gray-100 text-gray-700 text-xs rounded-full px-2 py-1">
+              {pendingCollectionTests.length}
+            </span>
+          </TabsTrigger>
+          <TabsTrigger value="reception" className="flex items-center gap-2 data-[state=active]:border-b-2 data-[state=active]:border-[#009933]">
+            <CheckCircle className="h-5 w-5" />
+            Receive Specimen
+            <span className="ml-1 bg-gray-100 text-gray-700 text-xs rounded-full px-2 py-1">
+              {collectedTests.length}
+            </span>
+          </TabsTrigger>
+          <TabsTrigger value="results" className="flex items-center gap-2 data-[state=active]:border-b-2 data-[state=active]:border-[#009933]">
+            <FileCheck className="h-5 w-5" />
+            Patient Lab Results
+            <span className="ml-1 bg-gray-100 text-gray-700 text-xs rounded-full px-2 py-1">
+              {receivedTests.length}
+            </span>
+          </TabsTrigger>
+          <TabsTrigger value="previous" className="flex items-center gap-2 data-[state=active]:border-b-2 data-[state=active]:border-[#009933]">
+            <ClockIcon className="h-5 w-5" />
+            View Previous Results
+          </TabsTrigger>
+        </TabsList>
+        
+        <TabsContent value="collection" className="p-4 border rounded-lg shadow-sm">
+          <CollectionTab />
+        </TabsContent>
+        
+        <TabsContent value="reception" className="p-4 border rounded-lg shadow-sm">
+          <ReceptionTab />
+        </TabsContent>
+        
+        <TabsContent value="results" className="p-4 border rounded-lg shadow-sm">
+          <ResultsTab />
+        </TabsContent>
+        
+        <TabsContent value="previous" className="p-4 border rounded-lg shadow-sm">
+          <div>
+            <div className="mb-4 flex items-center gap-4">
+              <div className="relative flex-1">
+                <Search className="absolute left-2 top-2.5 h-4 w-4 text-gray-500" />
+                <Input
+                  placeholder="Search patient by name or ID..."
+                  className="pl-8"
+                />
               </div>
+              <Button>Search</Button>
             </div>
-          </TabsContent>
-        </Tabs>
-      )}
+            
+            <div className="text-center py-12 text-gray-500">
+              Search for a patient to view their previous lab results
+            </div>
+          </div>
+        </TabsContent>
+      </Tabs>
     </div>
   );
 };
