@@ -36,7 +36,7 @@ export const LocationSelector = ({ onOpen }: LocationSelectorProps) => {
       <div className="flex justify-end">
         <Button 
           onClick={onOpen}
-          className="bg-[#f9d94e] hover:bg-[#eacb3f] text-black font-semibold"
+          className="bg-[#009933] hover:bg-[#007a29] text-white font-semibold"
           disabled={!department}
         >
           OPEN

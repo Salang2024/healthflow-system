@@ -47,10 +47,10 @@ export const Sidebar = () => {
 
   return (
     <div className={cn(
-      "bg-[#192042] h-screen flex flex-col transition-all",
+      "bg-[#009933] h-screen flex flex-col transition-all", // Changed to solid green color
       expanded ? "w-[220px]" : "w-[60px]"
     )}>
-      <div className="p-3 border-b border-gray-700 flex justify-between items-center">
+      <div className="p-3 border-b border-green-700 flex justify-between items-center">
         <Button 
           variant="ghost" 
           className="p-2 text-white hover:bg-white/10" 
@@ -91,7 +91,7 @@ export const Sidebar = () => {
           onToggleSubmenu={() => toggleSubmenu("laboratory")}
         />
         {expanded && openSubmenus["laboratory"] && (
-          <div className="bg-[#121a36] pl-12">
+          <div className="bg-[#007a29] pl-12">
             <Link to="/laboratory" className="block py-2 text-white hover:bg-white/10 no-underline">
               Collect Specimen
             </Link>

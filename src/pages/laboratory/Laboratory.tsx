@@ -98,7 +98,7 @@ const Laboratory = () => {
         <Card>
           <CardHeader className="pb-3">
             <CardTitle className="flex items-center gap-2 text-lg">
-              <Beaker className="h-5 w-5 text-primary" />
+              <Beaker className="h-5 w-5 text-[#009933]" />
               Pending Tests
             </CardTitle>
             <CardDescription>View and process pending laboratory tests</CardDescription>
@@ -142,7 +142,7 @@ const Laboratory = () => {
                           onChange={(e) => setNewResult(e.target.value)}
                         />
                         <Button
-                          className="w-full"
+                          className="w-full bg-[#009933] hover:bg-[#007a29]"
                           onClick={() => {
                             if (newResult.trim()) {
                               updateTestStatus(test.id, "completed", newResult);
@@ -169,7 +169,7 @@ const Laboratory = () => {
         <Card>
           <CardHeader className="pb-3">
             <CardTitle className="flex items-center gap-2 text-lg">
-              <FileCheck className="h-5 w-5 text-primary" />
+              <FileCheck className="h-5 w-5 text-[#009933]" />
               Completed Tests
             </CardTitle>
             <CardDescription>View completed laboratory tests and results</CardDescription>
