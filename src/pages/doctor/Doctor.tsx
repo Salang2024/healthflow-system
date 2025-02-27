@@ -64,16 +64,16 @@ const Doctor = () => {
   };
 
   return (
-    <div>
-      <div className="mb-6">
-        <h1 className="text-2xl font-bold text-gray-900">Doctor's Consultation</h1>
+    <div className="container mx-auto p-6 animate-fadeIn">
+      <div className="mb-8">
+        <h1 className="text-3xl font-bold text-gray-900">Doctor's Consultation</h1>
         <p className="text-gray-500">Record patient consultation details and treatment plan</p>
       </div>
 
       <div className="grid gap-6 md:grid-cols-2">
         <Card>
-          <CardHeader className="pb-3">
-            <CardTitle className="flex items-center gap-2 text-lg">
+          <CardHeader>
+            <CardTitle className="flex items-center gap-2">
               <Stethoscope className="h-5 w-5 text-primary" />
               Clinical Assessment
             </CardTitle>
@@ -126,8 +126,8 @@ const Doctor = () => {
         </Card>
 
         <Card>
-          <CardHeader className="pb-3">
-            <CardTitle className="flex items-center gap-2 text-lg">
+          <CardHeader>
+            <CardTitle className="flex items-center gap-2">
               <ClipboardList className="h-5 w-5 text-primary" />
               Diagnosis & Orders
             </CardTitle>
@@ -176,7 +176,7 @@ const Doctor = () => {
                 />
               </div>
 
-              <Button type="submit">
+              <Button type="submit" className="w-full">
                 Save Clinical Notes
               </Button>
             </form>

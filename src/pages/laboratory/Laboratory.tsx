@@ -88,16 +88,16 @@ const Laboratory = () => {
   };
 
   return (
-    <div>
-      <div className="mb-6">
-        <h1 className="text-2xl font-bold text-gray-900">Laboratory Management</h1>
+    <div className="container mx-auto p-6 animate-fadeIn">
+      <div className="mb-8">
+        <h1 className="text-3xl font-bold text-gray-900">Laboratory Management</h1>
         <p className="text-gray-500">Manage laboratory tests and results</p>
       </div>
 
       <div className="grid gap-6 md:grid-cols-2">
         <Card>
-          <CardHeader className="pb-3">
-            <CardTitle className="flex items-center gap-2 text-lg">
+          <CardHeader>
+            <CardTitle className="flex items-center gap-2">
               <Beaker className="h-5 w-5 text-primary" />
               Pending Tests
             </CardTitle>
@@ -167,8 +167,8 @@ const Laboratory = () => {
         </Card>
 
         <Card>
-          <CardHeader className="pb-3">
-            <CardTitle className="flex items-center gap-2 text-lg">
+          <CardHeader>
+            <CardTitle className="flex items-center gap-2">
               <FileCheck className="h-5 w-5 text-primary" />
               Completed Tests
             </CardTitle>

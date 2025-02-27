@@ -7,17 +7,17 @@ import { CalendarIcon, UserPlus } from "lucide-react";
 
 const Registration = () => {
   return (
-    <div>
-      <div className="mb-6">
-        <h1 className="text-2xl font-bold text-gray-900">Patient Registration</h1>
+    <div className="container mx-auto p-6 animate-fadeIn">
+      <div className="mb-8">
+        <h1 className="text-3xl font-bold text-gray-900">Patient Registration</h1>
         <p className="text-gray-500">Register new patients and manage appointments</p>
       </div>
 
       <div className="grid gap-6 md:grid-cols-2">
-        <Card>
-          <CardHeader className="pb-3">
-            <CardTitle className="flex items-center gap-2 text-lg">
-              <UserPlus className="h-5 w-5 text-primary" />
+        <Card className="medical-card">
+          <CardHeader>
+            <CardTitle className="flex items-center gap-2">
+              <UserPlus className="h-5 w-5 text-medical-600" />
               New Patient Registration
             </CardTitle>
             <CardDescription>Enter patient's personal information</CardDescription>
@@ -27,11 +27,11 @@ const Registration = () => {
               <div className="grid gap-4 md:grid-cols-2">
                 <div className="space-y-2">
                   <Label htmlFor="firstName">First Name</Label>
-                  <Input id="firstName" placeholder="Enter first name" />
+                  <Input id="firstName" placeholder="Enter first name" className="medical-input" />
                 </div>
                 <div className="space-y-2">
                   <Label htmlFor="lastName">Last Name</Label>
-                  <Input id="lastName" placeholder="Enter last name" />
+                  <Input id="lastName" placeholder="Enter last name" className="medical-input" />
                 </div>
               </div>
 
@@ -41,6 +41,7 @@ const Registration = () => {
                   <Input
                     id="dob"
                     type="date"
+                    className="medical-input"
                   />
                   <Button variant="outline" size="icon">
                     <CalendarIcon className="h-4 w-4" />
@@ -54,6 +55,7 @@ const Registration = () => {
                   id="phoneNumber"
                   type="tel"
                   placeholder="Enter phone number"
+                  className="medical-input"
                 />
               </div>
 
@@ -63,6 +65,7 @@ const Registration = () => {
                   id="email"
                   type="email"
                   placeholder="Enter email address"
+                  className="medical-input"
                 />
               </div>
 
@@ -71,19 +74,20 @@ const Registration = () => {
                 <Input
                   id="address"
                   placeholder="Enter address"
+                  className="medical-input"
                 />
               </div>
 
-              <Button className="w-full">
+              <Button className="w-full bg-medical-600 hover:bg-medical-700 text-white">
                 Register Patient
               </Button>
             </form>
           </CardContent>
         </Card>
 
-        <Card>
-          <CardHeader className="pb-3">
-            <CardTitle className="text-lg">Recent Registrations</CardTitle>
+        <Card className="medical-card">
+          <CardHeader>
+            <CardTitle>Recent Registrations</CardTitle>
             <CardDescription>Last 5 patient registrations</CardDescription>
           </CardHeader>
           <CardContent>
