@@ -69,16 +69,16 @@ const Triage = () => {
   };
 
   return (
-    <div className="container mx-auto p-6 animate-fadeIn">
-      <div className="mb-8">
-        <h1 className="text-3xl font-bold text-gray-900">Patient Triage</h1>
+    <div>
+      <div className="mb-6">
+        <h1 className="text-2xl font-bold text-gray-900">Patient Triage</h1>
         <p className="text-gray-500">Record vital signs and initial assessment</p>
       </div>
 
       <div className="grid gap-6 md:grid-cols-2">
-        <Card className="medical-card">
-          <CardHeader>
-            <CardTitle className="flex items-center gap-2">
+        <Card>
+          <CardHeader className="pb-3">
+            <CardTitle className="flex items-center gap-2 text-lg">
               <Stethoscope className="h-5 w-5 text-primary" />
               Vital Signs
             </CardTitle>
@@ -94,7 +94,6 @@ const Triage = () => {
                     placeholder="120/80"
                     value={formData.bloodPressure}
                     onChange={handleInputChange}
-                    className="medical-input"
                     required
                   />
                 </div>
@@ -106,7 +105,6 @@ const Triage = () => {
                     type="number"
                     value={formData.heartRate}
                     onChange={handleInputChange}
-                    className="medical-input"
                     required
                   />
                 </div>
@@ -122,7 +120,6 @@ const Triage = () => {
                     step="0.1"
                     value={formData.temperature}
                     onChange={handleInputChange}
-                    className="medical-input"
                     required
                   />
                 </div>
@@ -134,7 +131,6 @@ const Triage = () => {
                     type="number"
                     value={formData.respiratoryRate}
                     onChange={handleInputChange}
-                    className="medical-input"
                   />
                 </div>
               </div>
@@ -148,7 +144,6 @@ const Triage = () => {
                   max="100"
                   value={formData.oxygenSaturation}
                   onChange={handleInputChange}
-                  className="medical-input"
                 />
               </div>
 
@@ -159,21 +154,20 @@ const Triage = () => {
                   placeholder="Enter chief complaint"
                   value={formData.chiefComplaint}
                   onChange={handleInputChange}
-                  className="medical-input"
                   required
                 />
               </div>
 
-              <Button type="submit" className="w-full">
+              <Button type="submit">
                 Save Triage Data
               </Button>
             </form>
           </CardContent>
         </Card>
 
-        <Card className="medical-card">
-          <CardHeader>
-            <CardTitle>Triage Priority</CardTitle>
+        <Card>
+          <CardHeader className="pb-3">
+            <CardTitle className="text-lg">Triage Priority</CardTitle>
             <CardDescription>Set patient priority level based on assessment</CardDescription>
           </CardHeader>
           <CardContent>
