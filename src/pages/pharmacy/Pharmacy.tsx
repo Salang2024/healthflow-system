@@ -14,13 +14,15 @@ import {
   Clock, 
   Check, 
   X, 
-  CreditCard 
+  CreditCard,
+  Package,
+  PackageCheck,
 } from "lucide-react";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { useToast } from "@/hooks/use-toast";
 
 // Define PrescriptionStatus type
-type PrescriptionStatus = 'pending' | 'approved' | 'rejected' | 'paid';
+type PrescriptionStatus = 'pending' | 'approved' | 'rejected' | 'paid' | 'dispensed';
 
 // Define Medication interface
 interface Medication {
@@ -41,6 +43,8 @@ interface Prescription {
   status: PrescriptionStatus;
   medications: Medication[];
   rejectionReason?: string;
+  dispensedBy?: string;
+  dispensedDate?: string;
 }
 
 // Mock data for prescriptions with explicit PrescriptionStatus type
@@ -91,6 +95,19 @@ const initialPrescriptions: Prescription[] = [
       { id: 'M6', name: 'Atorvastatin 20mg', dosage: '1 tab OD', quantity: 30, price: 22.40 },
     ]
   },
+  {
+    id: 'P005',
+    patientName: 'Robert Davis',
+    patientId: 'PT10115',
+    doctorName: 'Dr. Garcia',
+    date: '2023-09-13',
+    status: 'dispensed' as PrescriptionStatus,
+    medications: [
+      { id: 'M7', name: 'Lisinopril 10mg', dosage: '1 tab OD', quantity: 30, price: 14.75 },
+    ],
+    dispensedBy: 'Jane Pharmacist',
+    dispensedDate: '2023-09-14'
+  },
 ];
 
 const Pharmacy = () => {
@@ -117,6 +134,7 @@ const Pharmacy = () => {
   const pendingPrescriptions = handleStatusFilter('pending');
   const approvedPrescriptions = handleStatusFilter('approved');
   const paidPrescriptions = handleStatusFilter('paid');
+  const dispensedPrescriptions = handleStatusFilter('dispensed');
 
   const calculateTotal = (medications: Medication[]) => {
     return medications.reduce((sum, med) => sum + (med.price * med.quantity), 0).toFixed(2);
@@ -177,6 +195,27 @@ const Pharmacy = () => {
     setSelectedPrescription(null);
   };
 
+  const handleDispenseMedication = (id: string) => {
+    const currentDate = new Date().toISOString().split('T')[0];
+    setPrescriptions(prev => 
+      prev.map(prescription => 
+        prescription.id === id 
+          ? { 
+              ...prescription, 
+              status: 'dispensed' as PrescriptionStatus,
+              dispensedBy: 'Pharmacy Staff', // In a real app, this would be the logged-in user
+              dispensedDate: currentDate
+            } 
+          : prescription
+      )
+    );
+    toast({
+      title: "Medication Dispensed",
+      description: "Patient has received their medication",
+    });
+    setSelectedPrescription(null);
+  };
+
   const PrescriptionTable = ({ prescriptions, onSelect }: { prescriptions: Prescription[], onSelect: (p: Prescription) => void }) => (
     <div className="overflow-x-auto">
       <table className="w-full border-collapse">
@@ -219,6 +258,56 @@ const Pharmacy = () => {
             <tr>
               <td colSpan={7} className="px-4 py-4 text-center text-gray-500">
                 No prescriptions found
+              </td>
+            </tr>
+          )}
+        </tbody>
+      </table>
+    </div>
+  );
+
+  const DispensedTable = ({ prescriptions, onSelect }: { prescriptions: Prescription[], onSelect: (p: Prescription) => void }) => (
+    <div className="overflow-x-auto">
+      <table className="w-full border-collapse">
+        <thead>
+          <tr className="bg-gray-100">
+            <th className="px-4 py-2 text-left">ID</th>
+            <th className="px-4 py-2 text-left">Patient</th>
+            <th className="px-4 py-2 text-left">Doctor</th>
+            <th className="px-4 py-2 text-left">Date Prescribed</th>
+            <th className="px-4 py-2 text-left">Dispensed By</th>
+            <th className="px-4 py-2 text-left">Date Dispensed</th>
+            <th className="px-4 py-2 text-left">Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          {prescriptions.length > 0 ? (
+            prescriptions.map((prescription) => (
+              <tr key={prescription.id} className="border-b hover:bg-gray-50">
+                <td className="px-4 py-2">{prescription.id}</td>
+                <td className="px-4 py-2">
+                  <div>{prescription.patientName}</div>
+                  <div className="text-xs text-gray-500">{prescription.patientId}</div>
+                </td>
+                <td className="px-4 py-2">{prescription.doctorName}</td>
+                <td className="px-4 py-2">{prescription.date}</td>
+                <td className="px-4 py-2">{prescription.dispensedBy}</td>
+                <td className="px-4 py-2">{prescription.dispensedDate}</td>
+                <td className="px-4 py-2">
+                  <Button 
+                    variant="outline" 
+                    size="sm" 
+                    onClick={() => onSelect(prescription)}
+                  >
+                    View
+                  </Button>
+                </td>
+              </tr>
+            ))
+          ) : (
+            <tr>
+              <td colSpan={7} className="px-4 py-4 text-center text-gray-500">
+                No dispensed prescriptions found
               </td>
             </tr>
           )}
@@ -270,8 +359,12 @@ const Pharmacy = () => {
                   <span>Approved ({approvedPrescriptions.length})</span>
                 </TabsTrigger>
                 <TabsTrigger value="paid" className="flex items-center gap-2">
-                  <CreditCard className="h-4 w-4" />
-                  <span>Paid ({paidPrescriptions.length})</span>
+                  <Package className="h-4 w-4" />
+                  <span>Ready to Dispense ({paidPrescriptions.length})</span>
+                </TabsTrigger>
+                <TabsTrigger value="dispensed" className="flex items-center gap-2">
+                  <PackageCheck className="h-4 w-4" />
+                  <span>Dispensed ({dispensedPrescriptions.length})</span>
                 </TabsTrigger>
               </TabsList>
 
@@ -295,6 +388,13 @@ const Pharmacy = () => {
                   onSelect={setSelectedPrescription} 
                 />
               </TabsContent>
+
+              <TabsContent value="dispensed">
+                <DispensedTable 
+                  prescriptions={dispensedPrescriptions} 
+                  onSelect={setSelectedPrescription} 
+                />
+              </TabsContent>
             </Tabs>
           </CardContent>
         </Card>
@@ -304,10 +404,15 @@ const Pharmacy = () => {
             <CardHeader>
               <CardTitle>Prescription Details</CardTitle>
               <CardDescription>
-                <div className="flex justify-between">
+                <div className="flex flex-col sm:flex-row sm:justify-between gap-2">
                   <span>ID: {selectedPrescription.id} | Patient: {selectedPrescription.patientName} ({selectedPrescription.patientId})</span>
                   <span>Prescribed by: {selectedPrescription.doctorName} on {selectedPrescription.date}</span>
                 </div>
+                {selectedPrescription.status === 'dispensed' && (
+                  <div className="mt-2 text-medical-600 font-medium">
+                    Dispensed by: {selectedPrescription.dispensedBy} on {selectedPrescription.dispensedDate}
+                  </div>
+                )}
               </CardDescription>
             </CardHeader>
             <CardContent>
@@ -385,8 +490,17 @@ const Pharmacy = () => {
                 )}
                 
                 {selectedPrescription.status === 'paid' && (
+                  <Button 
+                    className="bg-medical-600 hover:bg-medical-700 text-white flex items-center gap-2"
+                    onClick={() => handleDispenseMedication(selectedPrescription.id)}
+                  >
+                    <PackageCheck className="h-4 w-4" /> Dispense Medication
+                  </Button>
+                )}
+                
+                {selectedPrescription.status === 'dispensed' && (
                   <div className="flex items-center text-medical-600">
-                    <Check className="h-5 w-5 mr-2" /> Payment Completed
+                    <PackageCheck className="h-5 w-5 mr-2" /> Medication Dispensed
                   </div>
                 )}
               </div>
