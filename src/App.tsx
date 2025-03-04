@@ -9,6 +9,7 @@ import Registration from "./pages/reception/Registration";
 import Triage from "./pages/triage/Triage";
 import Doctor from "./pages/doctor/Doctor";
 import Laboratory from "./pages/laboratory/Laboratory";
+import Pharmacy from "./pages/pharmacy/Pharmacy";
 import Dashboard from "./pages/dashboard/Dashboard";
 import NotFound from "./pages/NotFound";
 
@@ -30,6 +31,7 @@ const App = () => (
               <Route path="/triage" element={<Triage />} />
               <Route path="/doctor" element={<Doctor />} />
               <Route path="/laboratory" element={<Laboratory />} />
+              <Route path="/pharmacy" element={<Pharmacy />} />
               <Route path="*" element={<NotFound />} />
             </Routes>
           </main>
