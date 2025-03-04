@@ -1,4 +1,3 @@
-
 import jsPDF from "jspdf";
 import "jspdf-autotable";
 import * as XLSX from "xlsx";
@@ -25,6 +24,7 @@ interface Prescription {
 }
 
 export const generatePDF = (prescription: Prescription) => {
+  // Create a new jsPDF instance
   const doc = new jsPDF();
   
   // Add title
@@ -74,6 +74,7 @@ export const generatePDF = (prescription: Prescription) => {
     tableRows.push(medicationData);
   });
   
+  // Use jspdf-autotable correctly
   (doc as any).autoTable({
     head: [tableColumn],
     body: tableRows,
@@ -83,8 +84,8 @@ export const generatePDF = (prescription: Prescription) => {
     headStyles: { fillColor: [66, 135, 245] }
   });
   
-  // Calculate table end Y position
-  const finalY = (doc as any).lastAutoTable.finalY + 10;
+  // Get the final Y position after the table
+  const finalY = (doc as any).previousAutoTable.finalY + 10;
   
   // Add total
   const total = prescription.medications.reduce((sum, med) => sum + (med.price * med.quantity), 0);
