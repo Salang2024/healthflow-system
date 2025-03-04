@@ -19,15 +19,39 @@ import {
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { useToast } from "@/hooks/use-toast";
 
-// Mock data for prescriptions
-const initialPrescriptions = [
+// Define PrescriptionStatus type
+type PrescriptionStatus = 'pending' | 'approved' | 'rejected' | 'paid';
+
+// Define Medication interface
+interface Medication {
+  id: string;
+  name: string;
+  dosage: string;
+  quantity: number;
+  price: number;
+}
+
+// Define Prescription interface
+interface Prescription {
+  id: string;
+  patientName: string;
+  patientId: string;
+  doctorName: string;
+  date: string;
+  status: PrescriptionStatus;
+  medications: Medication[];
+  rejectionReason?: string;
+}
+
+// Mock data for prescriptions with explicit PrescriptionStatus type
+const initialPrescriptions: Prescription[] = [
   {
     id: 'P001',
     patientName: 'John Smith',
     patientId: 'PT10045',
     doctorName: 'Dr. Williams',
     date: '2023-09-15',
-    status: 'pending',
+    status: 'pending' as PrescriptionStatus,
     medications: [
       { id: 'M1', name: 'Amoxicillin 500mg', dosage: '1 tab TID', quantity: 21, price: 12.50 },
       { id: 'M2', name: 'Paracetamol 500mg', dosage: '1 tab QID PRN', quantity: 20, price: 5.00 },
@@ -39,7 +63,7 @@ const initialPrescriptions = [
     patientId: 'PT10062',
     doctorName: 'Dr. Martinez',
     date: '2023-09-15',
-    status: 'pending',
+    status: 'pending' as PrescriptionStatus,
     medications: [
       { id: 'M3', name: 'Losartan 50mg', dosage: '1 tab OD', quantity: 30, price: 18.75 },
     ]
@@ -50,7 +74,7 @@ const initialPrescriptions = [
     patientId: 'PT10078',
     doctorName: 'Dr. Smith',
     date: '2023-09-14',
-    status: 'approved',
+    status: 'approved' as PrescriptionStatus,
     medications: [
       { id: 'M4', name: 'Metformin 500mg', dosage: '1 tab BD', quantity: 60, price: 15.20 },
       { id: 'M5', name: 'Aspirin 81mg', dosage: '1 tab OD', quantity: 30, price: 4.50 },
@@ -62,33 +86,12 @@ const initialPrescriptions = [
     patientId: 'PT10103',
     doctorName: 'Dr. Johnson',
     date: '2023-09-14',
-    status: 'paid',
+    status: 'paid' as PrescriptionStatus,
     medications: [
       { id: 'M6', name: 'Atorvastatin 20mg', dosage: '1 tab OD', quantity: 30, price: 22.40 },
     ]
   },
 ];
-
-type PrescriptionStatus = 'pending' | 'approved' | 'rejected' | 'paid';
-
-interface Medication {
-  id: string;
-  name: string;
-  dosage: string;
-  quantity: number;
-  price: number;
-}
-
-interface Prescription {
-  id: string;
-  patientName: string;
-  patientId: string;
-  doctorName: string;
-  date: string;
-  status: PrescriptionStatus;
-  medications: Medication[];
-  rejectionReason?: string;
-}
 
 const Pharmacy = () => {
   const [prescriptions, setPrescriptions] = useState<Prescription[]>(initialPrescriptions);
@@ -123,7 +126,7 @@ const Pharmacy = () => {
     setPrescriptions(prev => 
       prev.map(prescription => 
         prescription.id === id 
-          ? { ...prescription, status: 'approved' } 
+          ? { ...prescription, status: 'approved' as PrescriptionStatus } 
           : prescription
       )
     );
@@ -147,7 +150,7 @@ const Pharmacy = () => {
     setPrescriptions(prev => 
       prev.map(prescription => 
         prescription.id === id 
-          ? { ...prescription, status: 'rejected', rejectionReason } 
+          ? { ...prescription, status: 'rejected' as PrescriptionStatus, rejectionReason } 
           : prescription
       )
     );
@@ -163,7 +166,7 @@ const Pharmacy = () => {
     setPrescriptions(prev => 
       prev.map(prescription => 
         prescription.id === id 
-          ? { ...prescription, status: 'paid' } 
+          ? { ...prescription, status: 'paid' as PrescriptionStatus } 
           : prescription
       )
     );
