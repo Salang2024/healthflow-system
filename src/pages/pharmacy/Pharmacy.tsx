@@ -1,11 +1,10 @@
-
 import React, { useState } from 'react';
 import { Card, CardHeader, CardTitle, CardDescription, CardContent, CardFooter } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { FilePdf, FileSpreadsheet, Package2, Search } from "lucide-react";
+import { FileText, FileSpreadsheet, Package2, Search } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import { generatePDF, generateExcel } from "@/utils/fileExport";
 
@@ -337,7 +336,7 @@ const Pharmacy = () => {
                               </div>
                               <div className="flex space-x-2">
                                 <Button size="sm" variant="outline" onClick={(e) => { e.stopPropagation(); downloadPrescriptionPDF(prescription); }}>
-                                  <FilePdf className="h-4 w-4" />
+                                  <FileText className="h-4 w-4" />
                                 </Button>
                                 <Button size="sm" variant="outline" onClick={(e) => { e.stopPropagation(); downloadPrescriptionExcel(prescription); }}>
                                   <FileSpreadsheet className="h-4 w-4" />
@@ -417,7 +416,7 @@ const Pharmacy = () => {
                 {selectedPrescription.status === "dispensed" && (
                   <div className="flex w-full space-x-2">
                     <Button variant="outline" className="flex-1" onClick={() => downloadPrescriptionPDF(selectedPrescription)}>
-                      <FilePdf className="mr-2 h-4 w-4" />
+                      <FileText className="mr-2 h-4 w-4" />
                       Download PDF
                     </Button>
                     <Button variant="outline" className="flex-1" onClick={() => downloadPrescriptionExcel(selectedPrescription)}>
