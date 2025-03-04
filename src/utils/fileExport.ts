@@ -1,6 +1,12 @@
 import jsPDF from "jspdf";
+import { jsPDF as jsPDFType } from "jspdf";
 import "jspdf-autotable";
 import * as XLSX from "xlsx";
+
+// Need to augment the jsPDF type to include autoTable method
+interface jsPDFWithAutoTable extends jsPDFType {
+  autoTable: (options: any) => any;
+}
 
 // Define types (matching the ones in Pharmacy.tsx)
 interface Medication {
@@ -24,8 +30,8 @@ interface Prescription {
 }
 
 export const generatePDF = (prescription: Prescription) => {
-  // Create a new jsPDF instance
-  const doc = new jsPDF();
+  // Create a new jsPDF instance with proper typing
+  const doc = new jsPDF() as jsPDFWithAutoTable;
   
   // Add title
   doc.setFontSize(20);
@@ -74,8 +80,8 @@ export const generatePDF = (prescription: Prescription) => {
     tableRows.push(medicationData);
   });
   
-  // Use jspdf-autotable correctly
-  (doc as any).autoTable({
+  // Use jspdf-autotable with proper typing
+  doc.autoTable({
     head: [tableColumn],
     body: tableRows,
     startY: 82,
@@ -85,7 +91,7 @@ export const generatePDF = (prescription: Prescription) => {
   });
   
   // Get the final Y position after the table
-  const finalY = (doc as any).previousAutoTable.finalY + 10;
+  const finalY = doc.previousAutoTable.finalY + 10;
   
   // Add total
   const total = prescription.medications.reduce((sum, med) => sum + (med.price * med.quantity), 0);
