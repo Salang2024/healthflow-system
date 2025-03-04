@@ -1,124 +1,146 @@
 
-import * as XLSX from 'xlsx';
-import jsPDF from 'jspdf';
-import 'jspdf-autotable';
-import { Medication } from '@/types/pharmacy';
+import jsPDF from "jspdf";
+import "jspdf-autotable";
+import * as XLSX from "xlsx";
 
-// Helper to format currency
-const formatCurrency = (amount: number): string => {
-  return `$${amount.toFixed(2)}`;
+// Define types (matching the ones in Pharmacy.tsx)
+interface Medication {
+  id: string;
+  name: string;
+  dosage: string;
+  quantity: number;
+  price: number;
+}
+
+interface Prescription {
+  id: string;
+  patientName: string;
+  patientId: string;
+  doctorName: string;
+  date: string;
+  status: string;
+  medications: Medication[];
+  dispensedBy?: string;
+  dispensedDate?: string;
+}
+
+export const generatePDF = (prescription: Prescription) => {
+  const doc = new jsPDF();
+  
+  // Add title
+  doc.setFontSize(20);
+  doc.text("PRESCRIPTION RECEIPT", 105, 15, { align: "center" });
+  
+  // Add hospital info
+  doc.setFontSize(12);
+  doc.text("Medical Clinic Hospital", 105, 25, { align: "center" });
+  doc.setFontSize(10);
+  doc.text("123 Healthcare Ave, Medicity, MC 12345", 105, 30, { align: "center" });
+  doc.text("Phone: (555) 123-4567", 105, 35, { align: "center" });
+  
+  // Add line
+  doc.line(20, 40, 190, 40);
+  
+  // Add prescription details
+  doc.setFontSize(11);
+  doc.text(`Prescription ID: ${prescription.id}`, 20, 50);
+  doc.text(`Date: ${prescription.date}`, 150, 50);
+  doc.text(`Patient: ${prescription.patientName}`, 20, 57);
+  doc.text(`Patient ID: ${prescription.patientId}`, 150, 57);
+  doc.text(`Prescribed by: ${prescription.doctorName}`, 20, 64);
+  
+  if (prescription.dispensedBy && prescription.dispensedDate) {
+    doc.text(`Dispensed by: ${prescription.dispensedBy}`, 20, 71);
+    doc.text(`Dispensed Date: ${prescription.dispensedDate}`, 150, 71);
+  }
+  
+  // Add line
+  doc.line(20, 78, 190, 78);
+  
+  // Add medications table
+  const tableColumn = ["No", "Medication", "Dosage", "Quantity", "Unit Price", "Total"];
+  const tableRows: Array<(string | number)[]> = [];
+  
+  prescription.medications.forEach((medication, index) => {
+    const total = medication.price * medication.quantity;
+    const medicationData = [
+      index + 1,
+      medication.name,
+      medication.dosage,
+      medication.quantity,
+      `$${medication.price.toFixed(2)}`,
+      `$${total.toFixed(2)}`
+    ];
+    tableRows.push(medicationData);
+  });
+  
+  (doc as any).autoTable({
+    head: [tableColumn],
+    body: tableRows,
+    startY: 82,
+    theme: 'grid',
+    styles: { fontSize: 10 },
+    headStyles: { fillColor: [66, 135, 245] }
+  });
+  
+  // Calculate table end Y position
+  const finalY = (doc as any).lastAutoTable.finalY + 10;
+  
+  // Add total
+  const total = prescription.medications.reduce((sum, med) => sum + (med.price * med.quantity), 0);
+  doc.setFontSize(12);
+  doc.text(`Total Amount: $${total.toFixed(2)}`, 150, finalY);
+  
+  // Add footer
+  doc.setFontSize(10);
+  doc.text("Thank you for choosing Medical Clinic Hospital", 105, finalY + 20, { align: "center" });
+  doc.text("Get well soon!", 105, finalY + 27, { align: "center" });
+  
+  // Save PDF
+  doc.save(`prescription_${prescription.id}.pdf`);
 };
 
-// Export prescription to Excel
-export const exportToExcel = (
-  prescriptionId: string,
-  patientName: string,
-  patientId: string,
-  doctorName: string,
-  date: string,
-  medications: Medication[]
-) => {
-  // Create workbook and worksheet
-  const wb = XLSX.utils.book_new();
+export const generateExcel = (prescription: Prescription) => {
+  // Create worksheet for prescription details
+  const detailsWS = XLSX.utils.aoa_to_sheet([
+    ["Prescription Details"],
+    ["ID", prescription.id],
+    ["Date", prescription.date],
+    ["Patient Name", prescription.patientName],
+    ["Patient ID", prescription.patientId],
+    ["Doctor", prescription.doctorName],
+    ["Status", prescription.status]
+  ]);
   
-  // Create medication data rows
-  const medicationRows = medications.map(med => [
+  if (prescription.dispensedBy && prescription.dispensedDate) {
+    XLSX.utils.sheet_add_aoa(detailsWS, [
+      ["Dispensed By", prescription.dispensedBy],
+      ["Dispensed Date", prescription.dispensedDate]
+    ], { origin: -1 });
+  }
+  
+  // Create worksheet for medications
+  const medsHeader = ["No.", "Medication", "Dosage", "Quantity", "Unit Price ($)", "Total ($)"];
+  const medsData = prescription.medications.map((med, index) => [
+    index + 1,
     med.name,
     med.dosage,
     med.quantity,
-    formatCurrency(med.price),
-    formatCurrency(med.price * med.quantity)
+    med.price,
+    med.price * med.quantity
   ]);
   
-  // Calculate total
-  const total = medications.reduce((sum, med) => sum + (med.price * med.quantity), 0);
+  // Add total row
+  const total = prescription.medications.reduce((sum, med) => sum + (med.price * med.quantity), 0);
+  medsData.push(["", "", "", "", "TOTAL", total]);
   
-  // Create data with headers and content
-  const wsData = [
-    ['Prescription Details'],
-    ['ID', prescriptionId],
-    ['Patient Name', patientName],
-    ['Patient ID', patientId],
-    ['Doctor', doctorName],
-    ['Date', date],
-    [],
-    ['Medication', 'Dosage', 'Quantity', 'Unit Price', 'Total'],
-    ...medicationRows,
-    [],
-    ['', '', '', 'Grand Total:', formatCurrency(total)]
-  ];
+  const medsWS = XLSX.utils.aoa_to_sheet([medsHeader, ...medsData]);
   
-  // Create worksheet and add to workbook
-  const ws = XLSX.utils.aoa_to_sheet(wsData);
-  XLSX.utils.book_append_sheet(wb, ws, 'Prescription');
+  // Create workbook and add worksheets
+  const wb = XLSX.utils.book_new();
+  XLSX.utils.book_append_sheet(wb, detailsWS, "Prescription Details");
+  XLSX.utils.book_append_sheet(wb, medsWS, "Medications");
   
-  // Generate file name
-  const fileName = `Prescription_${prescriptionId}_${patientId}.xlsx`;
-  
-  // Write and download file
-  XLSX.writeFile(wb, fileName);
-};
-
-// Export prescription to PDF
-export const exportToPDF = (
-  prescriptionId: string,
-  patientName: string,
-  patientId: string,
-  doctorName: string,
-  date: string,
-  medications: Medication[],
-  status: string,
-  dispensedBy?: string,
-  dispensedDate?: string
-) => {
-  // Create new PDF document
-  const doc = new jsPDF();
-  
-  // Set font size and type
-  doc.setFontSize(20);
-  doc.text('Prescription', 105, 15, { align: 'center' });
-  
-  // Add prescription details
-  doc.setFontSize(12);
-  doc.text(`Prescription ID: ${prescriptionId}`, 14, 30);
-  doc.text(`Patient: ${patientName} (${patientId})`, 14, 40);
-  doc.text(`Doctor: ${doctorName}`, 14, 50);
-  doc.text(`Date: ${date}`, 14, 60);
-  doc.text(`Status: ${status}`, 14, 70);
-  
-  // Add dispensing details if available
-  let yPosition = 80;
-  if (dispensedBy && dispensedDate) {
-    doc.text(`Dispensed by: ${dispensedBy}`, 14, yPosition);
-    yPosition += 10;
-    doc.text(`Dispensed date: ${dispensedDate}`, 14, yPosition);
-    yPosition += 10;
-  }
-  
-  // Create table data
-  const tableColumn = ["Medication", "Dosage", "Quantity", "Unit Price", "Total"];
-  const tableRows = medications.map(med => [
-    med.name,
-    med.dosage,
-    med.quantity.toString(),
-    formatCurrency(med.price),
-    formatCurrency(med.price * med.quantity)
-  ]);
-  
-  // Add medication table
-  (doc as any).autoTable({
-    startY: yPosition,
-    head: [tableColumn],
-    body: tableRows,
-    foot: [['', '', '', 'Grand Total:', formatCurrency(medications.reduce((sum, med) => sum + (med.price * med.quantity), 0))]],
-    theme: 'grid',
-    headStyles: { fillColor: [41, 128, 185], textColor: 255 },
-    footStyles: { fillColor: [235, 237, 242], textColor: 0, fontStyle: 'bold' }
-  });
-  
-  // Generate filename
-  const fileName = `Prescription_${prescriptionId}_${patientId}.pdf`;
-  
-  // Save PDF
-  doc.save(fileName);
+  // Save Excel file
+  XLSX.writeFile(wb, `prescription_${prescription.id}.xlsx`);
 };
